@@ -49,7 +49,7 @@ public class GameObject {
 
 		startButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 - startButtonHeight / 2, startButtonWidth, startButtonHeight, "START",
-				this::startGame, new Color(0, 60, 60), Color.BLACK);
+				this::startBattle, new Color(0, 60, 60), Color.BLACK);
 
 		controlButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 - startButtonHeight / 2 + 230 + controlButtonHeight / 2, startButtonWidth,
@@ -69,7 +69,7 @@ public class GameObject {
 		} else if (state == GameState.OPEN) {
 			
 		} else if (state == GameState.TURN_BASED) {
-			player.update();
+			player.updateTurnBased();
 			testBattle.update();
 		} else if (state == GameState.DEAD) {
 			exitControlButton.update();
@@ -93,11 +93,7 @@ public class GameObject {
 			
 			
 		} else if (state == GameState.TURN_BASED) {
-			if (player.hand != null) {
-				for (TurnBasedCard c : player.hand) {
-					c.draw(g2);
-				}
-			}
+			player.drawTurnBased(g2);
 			testBattle.draw(g2);
 		} else if (state == GameState.DEAD) {
 			exitControlButton.draw(g2);

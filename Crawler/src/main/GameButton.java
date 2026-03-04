@@ -47,7 +47,7 @@ public class GameButton {
 
     /** Call this each frame to handle clicks */
     public void update() {
-        if (isHovering() && MouseInput.mouseClicked) {
+        if (isHovering() && MouseInput.mousePressed) {
             clickFunc.run();
             MouseInput.update(); // consume click so it doesn't trigger again
         }

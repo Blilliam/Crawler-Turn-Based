@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 
 import enums.Rarity;
 import enums.Type;
+import main.Assets;
 import main.GameObject;
 import main.MouseInput;
 
@@ -29,8 +30,8 @@ public class TurnBasedCard {
 	public int x;
 	public int y;
 
-	public int width = 180;
-	public int height = 270;
+	public static int width = 180;
+	public static int height = 270;
 
 	public int manaCost;
 	public int atk;
@@ -59,14 +60,8 @@ public class TurnBasedCard {
 		floatTime = (float) (Math.random() * Math.PI * 2);
 		floatSpeed = 0.02f + (float) Math.random() * 0.015f;
 		floatAmount = 4f + (float) Math.random() * 3f;
-
-		if (manaSphere == null) {
-			try {
-				manaSphere = ImageIO.read(getClass().getResource("/EnemyImage/edited mana sphere.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		manaSphere = Assets.manaSphere;
 	}
 
 	public void update() {
@@ -178,9 +173,10 @@ public class TurnBasedCard {
 	}
 
 	public boolean isClicked() {
-		int mx = MouseInput.mouseX;
-		int my = MouseInput.mouseY;
 
-		return mx >= x && mx <= x + width && my >= y && my <= y + height;
-	}
+        if(!MouseInput.mousePressed)
+            return false;
+
+        return isHovering();
+    }
 }

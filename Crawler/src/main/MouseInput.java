@@ -5,19 +5,14 @@ import java.awt.event.MouseEvent;
 
 public class MouseInput extends MouseAdapter {
 
-    public static int mouseX, mouseY;
+    public static int mouseX;
+    public static int mouseY;
+
     public static boolean mousePressed = false;
-    public static boolean mouseClicked = false;
 
     @Override
     public void mousePressed(MouseEvent e) {
         mousePressed = true;
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        mousePressed = false;
-        mouseClicked = true; // single-frame click
     }
 
     @Override
@@ -31,8 +26,8 @@ public class MouseInput extends MouseAdapter {
         mouseMoved(e);
     }
 
-    /** Call once per frame at the end of your game loop */
+    // called once per frame
     public static void update() {
-        mouseClicked = false;
+        mousePressed = false;
     }
 }

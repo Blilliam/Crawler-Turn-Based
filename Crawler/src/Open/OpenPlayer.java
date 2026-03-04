@@ -1,46 +1,56 @@
 package Open;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import TurnBased.TurnBasedCard;
-import enums.GameState;
-import enums.Rarity;
 import enums.Type;
+import main.Animation;
 import main.AppPanel;
+import main.Assets;
 import main.GameObject;
-import main.MouseInput;
 
 public class OpenPlayer {
 
-	public int hp;
+	public ArrayList<TurnBasedCard> deck = new ArrayList<>();
+	public ArrayList<TurnBasedCard> hand = new ArrayList<>();
 
-	public ArrayList<TurnBasedCard> deck;
-	public ArrayList<TurnBasedCard> hand;
-	public ArrayList<TurnBasedCard> discardDeck;
+	int frameWidth;
+	int frameHeight;
+	int frameCount;
 
-	public GameObject gameobj;
+	BufferedImage[] walkFrames;
 
-	public Rarity[] rarities;
+	Animation walkAnim;
+
+	GameObject gameobj;
 
 	public OpenPlayer(GameObject gameobj) {
 
+		frameWidth = 64;
+		frameHeight = 64;
+		frameCount = 8;
+
+		walkFrames = new BufferedImage[frameCount];
+
+		for (int i = 0; i < frameCount; i++) {
+
+			walkFrames[i] = Assets.playerSheet.getSubimage(i * frameWidth, 0, frameWidth, frameHeight);
+		}
+
+		walkAnim = new Animation(walkFrames, 100);
+
 		this.gameobj = gameobj;
 
-		deck = new ArrayList<>();
-		hand = new ArrayList<>();
-		discardDeck = new ArrayList<>();
-		
-		Type[] types = new Type[4];
-		types[0] = Type.WEAPON;
-		types[1] = Type.BUFF;
-		types[2] = Type.AURMOR;
-		types[3] = Type.MANA;
+		Type[] types = { Type.WEAPON, Type.BUFF, Type.AURMOR, Type.MANA };
 
-		// create cards
 		for (int i = 0; i < 5; i++) {
 			TurnBasedCard c = new TurnBasedCard(gameobj);
-			c.name = "Smth";
-			c.type = types[i%4];
+
+			c.name = "Card";
+			c.type = types[i % 4];
+
 			deck.add(c);
 		}
 
@@ -49,70 +59,79 @@ public class OpenPlayer {
 
 	public void moveCards(ArrayList<TurnBasedCard> from, ArrayList<TurnBasedCard> to, int count) {
 
-		if (from.size() < count)
-			return;
-
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count && !from.isEmpty(); i++)
 			to.add(from.remove(0));
-		}
 
 		layoutHand();
 	}
+	
+	public void updateOpen() {
+		walkAnim.update();
+	}
+	
+	public void drawOpen(Graphics2D g2) {
+		g2.drawImage(
+			    walkAnim.getFrame(),
+			    x,
+			    y,
+			    null
+			);
+	}
 
-	/**
-	 * BALATRO STYLE HAND POSITIONING
-	 */
+	public void updateTurnBased() {
+
+		TurnBasedCard clicked = null;
+
+		// TOP CARD FIRST
+		for (int i = hand.size() - 1; i >= 0; i--) {
+			if (hand.get(i).isClicked()) {
+				clicked = hand.get(i);
+				break;
+			}
+		}
+
+		if (clicked != null) {
+			hand.remove(clicked);
+			layoutHand();
+		}
+
+		for (TurnBasedCard c : hand)
+			c.update();
+	}
+
+	public void drawTurnBased(Graphics2D g2) {
+		for (TurnBasedCard c : hand)
+			c.draw(g2);
+	}
+
 	public void layoutHand() {
 
-		int cardCount = hand.size();
-		if (cardCount == 0)
+		int count = hand.size();
+		if (count == 0)
 			return;
 
-		int centerX = AppPanel.WIDTH / 2 - 180/2;
+		int centerX = AppPanel.WIDTH / 2 - TurnBasedCard.width / 2;
 		int baseY = AppPanel.HEIGHT - 400;
 
 		float spacing = 160f;
 		float maxAngle = 24f;
 		float curveHeight = 60f;
 
-		float startX = centerX - ((cardCount - 1) * spacing) / 2f;
+		float startX = centerX - ((count - 1) * spacing) / 2f;
 
-		for (int i = 0; i < cardCount; i++) {
+		for (int i = 0; i < count; i++) {
 
 			TurnBasedCard c = hand.get(i);
 
-			float t;
+			float t = (count == 1) ? 0.5f : (float) i / (count - 1);
 
-			if (cardCount == 1) {
-				t = 0.5f;
-			} else {
-				t = (float) i / (cardCount - 1);
-			}
-
-			// horizontal position
 			c.x = (int) (startX + i * spacing);
 
-			// curve
-			float curve = (float) (-Math.pow(t - 0.5f, 2) + 0.25);
+			float curve = (float) (-Math.pow(t - 0.5, 2) + 0.25);
 
 			c.y = (int) (baseY - curve * curveHeight);
 
-			// rotation toward middle
 			c.rotation = (t - 0.5f) * maxAngle;
-		}
-	}
-	
-	public void update() {
-		if (gameobj.state == GameState.TURN_BASED && MouseInput.mouseClicked) {
-			for (int i = 0; i < hand.size(); i++) {
-				if (hand.get(i).isClicked()) {
-					hand.remove(i);
-					layoutHand();
-				}
-			}
-		}
-		for (TurnBasedCard c : hand) {
-			c.update();
 		}
 	}
 }

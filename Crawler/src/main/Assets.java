@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 
 public class Assets {
@@ -24,6 +25,8 @@ public class Assets {
     public static BufferedImage mantichana;
     public static BufferedImage werewolf;
     public static BufferedImage mudman;
+    
+    public static BufferedImage playerSheet;
 
     public static void load(){
         try{
@@ -36,7 +39,9 @@ public class Assets {
             magicWand = ImageIO.read(Assets.class.getResource("/ItemImage/Sprite-Magic_Wand.png"));
             fireWand = ImageIO.read(Assets.class.getResource("/ItemImage/Sprite-Fire_Wand.png"));
             
-            manaSphere = ImageIO.read(Assets.class.getResource("/EnemyImage/edited mana sphere.png"));
+            manaSphere = ImageIO.read(Assets.class.getResource("/OtherImage/edited mana sphere.png"));
+            
+            playerSheet = ImageIO.read(Assets.class.getResource("/PlayerImage/antonio_spritesheet.png"));
 
             // Enemies
             zombie = ImageIO.read(Assets.class.getResource("/EnemyImage/Sprite-Zombie.png"));
