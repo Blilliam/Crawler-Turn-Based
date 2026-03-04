@@ -4,7 +4,7 @@ public enum GameState {
 	START,
 	PLAY,
 	DEAD,
-	SHOP,
+	UPGRADING,
 	CONTROLS,
 	TURN_BASED,
 }

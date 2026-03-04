@@ -14,6 +14,8 @@ public class TurnBasedEnemy {
 	
 	public int size = 200;
 	
+	public boolean isDead;
+	
 	public int x = AppPanel.WIDTH/ 2 - size/2;
 	public int y = AppPanel.HEIGHT/2 - 100 - size;
 
@@ -25,10 +27,12 @@ public class TurnBasedEnemy {
 		hp = 10;
 		atk = 1;
 		name = "tester";
+		
+		isDead = false;
 
 		if (sprite == null) {
 			try {
-				sprite = ImageIO.read(getClass().getResource("/images/Sprite-Skeleton.png"));
+				sprite = ImageIO.read(getClass().getResource("/EnemyImage/Sprite-Skeleton.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -58,5 +62,11 @@ public class TurnBasedEnemy {
 	            null
 	        );
 	    }
+	}
+	
+	public void update() {
+		if (hp <= 0) {
+			isDead = true;
+		}
 	}
 }

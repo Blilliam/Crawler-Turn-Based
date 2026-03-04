@@ -48,6 +48,7 @@ public class TurnBasedCard {
 	private float floatAmount;
 
 	private static BufferedImage manaSphere;
+	private BufferedImage itemSprite;
 
 	public TurnBasedCard(GameObject gameobj) {
 		this.gameobj = gameobj;
@@ -61,7 +62,7 @@ public class TurnBasedCard {
 
 		if (manaSphere == null) {
 			try {
-				manaSphere = ImageIO.read(getClass().getResource("/images/edited mana sphere.png"));
+				manaSphere = ImageIO.read(getClass().getResource("/EnemyImage/edited mana sphere.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -112,10 +113,16 @@ public class TurnBasedCard {
 		g2.setStroke(new BasicStroke(4));
 		g2.setColor(mainColor.brighter());
 		g2.drawRoundRect(0, 0, width, height, 20, 20);
-
+		
+		
+		//draw mana orb and text
 		drawText(g2);
-
+		
+		if (itemSprite != null)
+			g2.drawImage(itemSprite, 40, 40, 100, 100, null);
+		
 		g2.setTransform(old);
+
 	}
 
 	private void drawText(Graphics2D g2) {

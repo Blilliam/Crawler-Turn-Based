@@ -5,9 +5,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
+import Open.OpenPlayer;
+import TurnBased.TurnBasedBattle;
 import TurnBased.TurnBasedCard;
-import TurnBased.TurnBasedEnemy;
-import TurnBased.TurnBasedPlayer;
 import enums.GameState;
 
 public class GameObject {
@@ -24,18 +24,18 @@ public class GameObject {
 	int controlButtonWidth;
 	int controlButtonHeight;
 	GameButton controlButton;
-	
-	TurnBasedEnemy testEnemy;
 
 	public static GameState state;
 	
-	TurnBasedPlayer player;
+	TurnBasedBattle testBattle;
+	
+	OpenPlayer player;
 
 	public GameObject(MouseInput mouseHandler) {
 		this.mouseHandler = mouseHandler;
 		state = GameState.START;
 		
-		player = new TurnBasedPlayer(this);
+		player = new OpenPlayer(this);
 
 		startButtonWidth = 300;
 		startButtonHeight = 100;
@@ -51,9 +51,7 @@ public class GameObject {
 		exitControlButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 + startButtonHeight / 2 + 50, startButtonWidth, startButtonHeight, "EXIT BACK",
 				this::toStart);
-		
-		testEnemy = new TurnBasedEnemy();
-
+		testBattle = new TurnBasedBattle();
 	}
 
 	public void update() {
@@ -63,10 +61,11 @@ public class GameObject {
 
 		} else if (state == GameState.PLAY) {
 			player.update();
+			testBattle.update();
 		} else if (state == GameState.DEAD) {
 			exitControlButton.update();
 
-		} else if (state == GameState.SHOP) {
+		} else if (state == GameState.UPGRADING) {
 
 		} else if (state == GameState.CONTROLS) {
 			exitControlButton.update();
@@ -86,11 +85,11 @@ public class GameObject {
 					c.draw(g2);
 				}
 			}
-			testEnemy.draw(g2);
+			testBattle.draw(g2);
 		} else if (state == GameState.DEAD) {
 			exitControlButton.draw(g2);
 
-		} else if (state == GameState.SHOP) {
+		} else if (state == GameState.UPGRADING) {
 
 		} else if (state == GameState.CONTROLS) {
 			drawControls(g2);
@@ -106,10 +105,10 @@ public class GameObject {
 		g2.setFont(new Font("Malgun Gothic", Font.PLAIN, 30));
 		FontMetrics fm = g2.getFontMetrics();
 
-		String s1 = "Foward: W";
-		String s2 = "Backwards: S";
-		String s3 = "Boost: Shift";
-		String s4 = "Shoot: Left Click";
+		String s1 = "Up: W";
+		String s2 = "Down: S";
+		String s3 = "Left: A";
+		String s4 = "Right: D";
 
 		int x1 = (AppPanel.WIDTH - fm.stringWidth(s1)) / 2;
 		int x2 = (AppPanel.WIDTH - fm.stringWidth(s2)) / 2;
