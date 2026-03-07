@@ -33,4 +33,7 @@ public class Animation {
     public BufferedImage getFrame() {
         return frames[currentFrame];
     }
+    public void setFrame(int num) {
+    	currentFrame = num;
+    }
 }

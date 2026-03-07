@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
+import Open.OpenEnemy;
 import Open.OpenMap;
 import Open.OpenPlayer;
 import TurnBased.TurnBasedBattle;
-import TurnBased.TurnBasedCard;
 import enums.GameState;
 
 public class GameObject {
@@ -25,22 +26,32 @@ public class GameObject {
 	int controlButtonWidth;
 	int controlButtonHeight;
 	GameButton controlButton;
+	
+	public KeyboardInput keyH;
 
 	public static GameState state;
 	
 	TurnBasedBattle testBattle;
 	
-	OpenPlayer player;
+	public OpenPlayer player;
 	
-	OpenMap map;
+	public ArrayList<OpenEnemy> enemies;
+	
+	public OpenMap map;
 
-	public GameObject(MouseInput mouseHandler) {
+	public GameObject(KeyboardInput keyH, MouseInput mouseHandler) {
 		Assets.load();
+		
+		enemies = new ArrayList<OpenEnemy>();
+		
+		enemies.add(new OpenEnemy(this, 100, 100));
+		
+		this.keyH = keyH;
 		
 		this.mouseHandler = mouseHandler;
 		state = GameState.START;
 		
-		map = new OpenMap();
+		map = new OpenMap(this);
 		
 		player = new OpenPlayer(this);
 
@@ -49,7 +60,7 @@ public class GameObject {
 
 		startButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 - startButtonHeight / 2, startButtonWidth, startButtonHeight, "START",
-				this::startBattle, new Color(0, 60, 60), Color.BLACK);
+				this::startGame, new Color(0, 60, 60), Color.BLACK);
 
 		controlButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 - startButtonHeight / 2 + 230 + controlButtonHeight / 2, startButtonWidth,
@@ -63,15 +74,24 @@ public class GameObject {
 
 	public void update() {
 		if (state == GameState.START) {
+			
 			startButton.update();
 			controlButton.update();
 
 		} else if (state == GameState.OPEN) {
 			
+			player.updateOpen();
+			for (OpenEnemy e:enemies) {
+				e.update();
+			}
+			
 		} else if (state == GameState.TURN_BASED) {
+			
 			player.updateTurnBased();
 			testBattle.update();
+			
 		} else if (state == GameState.DEAD) {
+			
 			exitControlButton.update();
 
 		} else if (state == GameState.UPGRADING) {
@@ -86,21 +106,31 @@ public class GameObject {
 	public void draw(Graphics2D g2) {
 
 		if (state == GameState.START) {
+			
 			startButton.draw(g2);
 			controlButton.draw(g2);
-		} else if (state == GameState.OPEN) {
-			map.draw(g2);
 			
+		} else if (state == GameState.OPEN) {
+			
+			map.draw(g2);
+			player.drawOpen(g2);
+			for (OpenEnemy e:enemies) {
+				e.draw(g2);
+			}
 			
 		} else if (state == GameState.TURN_BASED) {
+			
 			player.drawTurnBased(g2);
 			testBattle.draw(g2);
+			
 		} else if (state == GameState.DEAD) {
+			
 			exitControlButton.draw(g2);
 
 		} else if (state == GameState.UPGRADING) {
 
 		} else if (state == GameState.CONTROLS) {
+			
 			drawControls(g2);
 			exitControlButton.draw(g2);
 		}

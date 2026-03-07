@@ -2,7 +2,7 @@ package Weapons;
 
 import enums.*;
 
-public class OpenWeapon {
+public abstract class OpenWeapon {
 	public static int atk;
 	public static Rarity rarity;
 	public static Type type; 
