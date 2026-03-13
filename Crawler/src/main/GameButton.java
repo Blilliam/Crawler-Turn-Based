@@ -11,7 +11,7 @@ import java.awt.Rectangle;
  */
 public class GameButton {
 
-    public int x, y, w, h;
+    private int x, y, w, h;
     private String buttonText;
     private Runnable clickFunc;
     private Color mainColor;

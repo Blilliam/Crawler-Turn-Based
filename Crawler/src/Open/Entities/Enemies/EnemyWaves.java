@@ -16,7 +16,7 @@ public class EnemyWaves {
 
 	public void update() {
 		// Only check for wave completion while playing
-		if (gameObj.state == GameState.OPEN && gameObj.enemies.size() == 0) {
+		if (GameObject.getState() == GameState.OPEN && gameObj.getEnemies().size() == 0) {
 			waveNum++;
 			createEnemies();
 		}
@@ -52,32 +52,25 @@ public class EnemyWaves {
 	        if (spawnLeftOrRight) {
 	            // Spawn left or right off-screen
 	            tempX = Math.random() < 0.5
-	                    ? gameObj.player.x - AppPanel.WIDTH / 2 - margin  // left
-	                    : gameObj.player.x + AppPanel.WIDTH / 2 + margin; // right
-	            tempY = (int) (Math.random() * gameObj.map.HEIGHT);
+	                    ? gameObj.getPlayer().getX() - AppPanel.WIDTH / 2 - margin  // left
+	                    : gameObj.getPlayer().getY() + AppPanel.WIDTH / 2 + margin; // right
+	            tempY = (int) (Math.random() * gameObj.getMap().HEIGHT);
 	        } else {
 	            // Spawn top or bottom off-screen
 	            tempY = Math.random() < 0.5
-	                    ? gameObj.player.y - AppPanel.HEIGHT / 2 - margin // top
-	                    : gameObj.player.y + AppPanel.HEIGHT / 2 + margin; // bottom
-	            tempX = (int) (Math.random() * gameObj.map.WIDTH);
+	                    ? gameObj.getPlayer().getY() - AppPanel.HEIGHT / 2 - margin // top
+	                    : gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2 + margin; // bottom
+	            tempX = (int) (Math.random() * gameObj.getMap().WIDTH);
 	        }
 
 	        // Clamp to map boundaries
-	        tempX = Math.max(0, Math.min(tempX, gameObj.map.WIDTH - 1));
-	        tempY = Math.max(0, Math.min(tempY, gameObj.map.HEIGHT - 1));
+	        tempX = Math.max(0, Math.min(tempX, gameObj.getMap().WIDTH - 1));
+	        tempY = Math.max(0, Math.min(tempY, gameObj.getMap().HEIGHT - 1));
 
-	        gameObj.enemies.add(new Enemy(gameObj, tempX, tempY, tier));
+	        gameObj.addEnemy(new Enemy(gameObj, tempX, tempY, tier));
 	    }
 
-	    // Optional boss
-	    if (waveNum % 10 == 0) {
-	        int bossTier = baseTier * 5;
-	        int bossX = gameObj.player.x; // can be centered on player X
-	        int bossY = gameObj.player.y - AppPanel.HEIGHT / 2 - margin; // above view
-	        bossX = Math.max(0, Math.min(bossX, gameObj.map.WIDTH - 1));
-	        bossY = Math.max(0, Math.min(bossY, gameObj.map.HEIGHT - 1));
-	        gameObj.enemies.add(new Enemy(gameObj, bossX, bossY, bossTier));
-	    }
+	    // implemente boss later and events like swarm boss
+	    
 	}
 }

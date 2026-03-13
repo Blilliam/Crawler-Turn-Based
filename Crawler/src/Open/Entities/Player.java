@@ -16,14 +16,14 @@ import main.GameObject;
 import main.enums.GameState;
 
 public class Player extends Entity {
-	public ArrayList<Artifact> artifacts = new ArrayList<>();
+	private ArrayList<Artifact> artifacts = new ArrayList<>();
 
-	public int expToUpgrade = 10;
-	public int totalUpgradesAvailible = 1;
-	public boolean expCollectedForUpgrade = false;
-	public int currExp;
+	private int expToUpgrade = 10;
+	private int totalUpgradesAvailible = 1;
+	private boolean expCollectedForUpgrade = false;
+	private int currExp;
 
-	public boolean isRight;
+	private boolean isRight;
 
 	// Animation
 	private BufferedImage[] walkFrames;
@@ -33,10 +33,12 @@ public class Player extends Entity {
 	public Player(GameObject gameObj) {
 		super(gameObj);
 		
-		hp = 10;
+		maxHp = 10;
+		currHp = maxHp;
+		
 
-		x = gameObj.map.HEIGHT / 2;
-		y = gameObj.map.WIDTH / 2;
+		x = gameObj.getMap().HEIGHT / 2;
+		y = gameObj.getMap().WIDTH / 2;
 
 		speed = 6;
 
@@ -56,14 +58,14 @@ public class Player extends Entity {
 
 	// Update player movement
 	public void update() {
-		if (hp <= 0) {
+		if (currHp <= 0) {
 			isDead = true;
-			gameObj.state = GameState.DEAD;
+			GameObject.setState(GameState.DEAD);
 		}
 		
 		updateOpenMovement();
 
-		for (Enemy e : gameObj.enemies) {
+		for (Enemy e : gameObj.getEnemies()) {
 			// e.damage(5);
 		}
 		handleEnemyCollisions();
@@ -72,7 +74,7 @@ public class Player extends Entity {
 
 	public void updateOpenMovement() {
 
-		if (gameObj.keyH.isMoving)
+		if (gameObj.getKeyH().isMoving)
 			walkAnim.update();
 		else
 			walkAnim.setFrame(3);
@@ -80,15 +82,15 @@ public class Player extends Entity {
 		double dx = 0;
 		double dy = 0;
 
-		if (gameObj.keyH.up)
+		if (gameObj.getKeyH().up)
 			dy -= 1;
-		if (gameObj.keyH.down)
+		if (gameObj.getKeyH().down)
 			dy += 1;
-		if (gameObj.keyH.left) {
+		if (gameObj.getKeyH().left) {
 			dx -= 1;
 			isRight = false;
 		}
-		if (gameObj.keyH.right) {
+		if (gameObj.getKeyH().right) {
 			dx += 1;
 			isRight = true;
 		}
@@ -114,10 +116,12 @@ public class Player extends Entity {
 			g2.drawImage(walkAnim.getFrame(), drawX + width, drawY, -100, height, null);
 
 		drawXPBar(g2);
+		
+		drawHpBar(g2);
 	}
 
 	private void drawXPBar(Graphics2D g2) {
-		if (totalUpgradesAvailible != 0) {
+		if (getTotalUpgradesAvailible() != 0) {
 			g2.setColor(Color.WHITE);
 			g2.setFont(new Font("Malgun Gothic", Font.PLAIN, 30));
 			FontMetrics fm = g2.getFontMetrics();
@@ -129,7 +133,7 @@ public class Player extends Entity {
 		int y = 0; // below score stats
 
 		// Percentage filled
-		float percent = Math.min(1.0f, (float) currExp / expToUpgrade);
+		float percent = Math.min(1.0f, (float) currExp / getExpToUpgrade());
 
 		// Background
 		g2.setColor(new Color(50, 50, 50, 180));
@@ -145,19 +149,82 @@ public class Player extends Entity {
 
 		// Text
 		g2.setFont(new Font("Malgun Gothic", Font.PLAIN, 20));
-		String text = currExp + " / " + expToUpgrade + " XP";
+		String text = "Exp: " + currExp + " / " + getExpToUpgrade();
 		int textWidth = g2.getFontMetrics().stringWidth(text);
 		g2.drawString(text, x + (barWidth - textWidth) / 2, y + barHeight - 5);
 	}
+	private void drawHpBar(Graphics2D g2) {
+		if (getTotalUpgradesAvailible() != 0) {
+			g2.setColor(Color.WHITE);
+			g2.setFont(new Font("Malgun Gothic", Font.PLAIN, 30));
+			FontMetrics fm = g2.getFontMetrics();
+		}
+		// Bar position & size
+		int barWidth = 200;
+		int barHeight = 30;
+		int x = (AppPanel.WIDTH - barWidth)/2;
+		int y = AppPanel.HEIGHT - barHeight - 100;
+
+		// Percentage filled
+		float percent = Math.min(1.0f, (float) currHp / maxHp);
+
+		// Background
+		g2.setColor(new Color(50, 50, 50, 180));
+		g2.fillRect(x, y, barWidth, barHeight);
+
+		// Filled portion
+		g2.setColor(new Color(255, 0, 0));
+		g2.fillRect(x, y, (int) (barWidth * percent), barHeight);
+
+		// Border
+		g2.setColor(Color.WHITE);
+		g2.drawRect(x, y, barWidth, barHeight);
+
+		// Text
+		g2.setFont(new Font("Malgun Gothic", Font.PLAIN, 20));
+		String text = "Hp: " + currHp + " / " + maxHp;
+		int textWidth = g2.getFontMetrics().stringWidth(text);
+		g2.drawString(text, x + (barWidth - textWidth) / 2, y + barHeight - 8);
+	}
 
 	public void handleEnemyCollisions() {
-		for (int i = 0; i < gameObj.enemies.size(); i++) {
+		for (int i = 0; i < gameObj.getEnemies().size(); i++) {
 
-			Enemy e2 = gameObj.enemies.get(i);
+			Enemy e2 = gameObj.getEnemies().get(i);
 
 			if (Entity.rectCollision(this, e2)) { // avoid divide by zero
-				hp--;
+				currHp--;
 			}
 		}
+	}
+	
+	public Enemy closestEnemy(ArrayList<Enemy> enemies) {
+		int indexOfClosestEnemy = 0;
+		
+		for (int i = 0; i < enemies.size() - 1; i++) {
+	        if (Entity.getDistance(this, enemies.get(i)) < Entity.getDistance(this, enemies.get(indexOfClosestEnemy))) {
+	        	indexOfClosestEnemy = i;
+	        }
+		}
+		
+		return enemies.get(indexOfClosestEnemy);
+	}
+	
+	
+
+	public int getTotalUpgradesAvailible() {
+		return totalUpgradesAvailible;
+	}
+
+	public void setTotalUpgradesAvailible(int totalUpgradesAvailible) {
+		this.totalUpgradesAvailible = totalUpgradesAvailible;
+	}
+
+	public int getExpToUpgrade() {
+		return expToUpgrade;
+	}
+
+	public void setExpToUpgrade(int expToUpgrade) {
+		this.expToUpgrade = expToUpgrade;
 	}
 }

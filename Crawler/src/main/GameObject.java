@@ -6,47 +6,55 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import Open.Entities.Exp;
 import Open.Entities.Player;
 import Open.Entities.Enemies.Enemy;
 import Open.Entities.Enemies.EnemyWaves;
 import Open.Map.Background;
+import Open.Upgrades.Upgrades;
 import main.enums.GameState;
 
 public class GameObject {
 	// declaring everything
 
-	MouseInput mouseHandler;
+	private MouseInput mouseHandler;
 
 	// buttons for game start/settings stuff
-	int startButtonWidth;
-	int startButtonHeight;
-	GameButton startButton;
+	private int startButtonWidth;
+	private int startButtonHeight;
+	private GameButton startButton;
 
-	int exitControlButtonWidth;
-	int exitControlButtonHeight;
-	GameButton exitControlButton;
+	private int exitControlButtonWidth;
+	private int exitControlButtonHeight;
+	private GameButton exitControlButton;
 
-	int controlButtonWidth;
-	int controlButtonHeight;
-	GameButton controlButton;
+	private int controlButtonWidth;
+	private int controlButtonHeight;
+	private GameButton controlButton;
 
 	// keyboard inputs
-	public KeyboardInput keyH;
+	private KeyboardInput keyH;
 
 	// managing the various tates
-	public static GameState state;
+	private static GameState state;
 
 	// player
-	public Player player;
+	private Player player;
 
 	// all enemies
-	public ArrayList<Enemy> enemies;
+	private ArrayList<Enemy> enemies;
+	
+	//exp
+	private ArrayList<Exp> exp;
+	
+	//upgrades
+	private Upgrades upgrades;
 
 	// manages enemy generation
-	public EnemyWaves waves;
+	private EnemyWaves waves;
 
 	// the map
-	public Background map;
+	private Background map;
 
 	public GameObject(KeyboardInput keyH, MouseInput mouseHandler) {
 		Assets.load(); // loads all the images
@@ -65,11 +73,11 @@ public class GameObject {
 				this::startGame, new Color(0, 60, 60), Color.BLACK);
 
 		controlButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
-				AppPanel.HEIGHT / 2 - startButtonHeight / 2 + 230 + controlButtonHeight / 2, startButtonWidth,
-				startButtonHeight, "CONTROLS", this::showControls, new Color(0, 60, 60), Color.BLACK);
+				AppPanel.HEIGHT / 2 - controlButtonWidth / 2 + 230 + controlButtonHeight / 2, controlButtonWidth,
+				controlButtonHeight, "CONTROLS", this::showControls, new Color(0, 60, 60), Color.BLACK);
 
-		exitControlButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
-				AppPanel.HEIGHT / 2 + startButtonHeight / 2 + 50, startButtonWidth, startButtonHeight, "EXIT BACK",
+		exitControlButton = new GameButton(AppPanel.WIDTH / 2 - exitControlButtonWidth / 2,
+				AppPanel.HEIGHT / 2 + exitControlButtonHeight / 2 + 50, exitControlButtonWidth, exitControlButtonHeight, "EXIT BACK",
 				this::toMenu);
 	}
 
@@ -105,6 +113,13 @@ public class GameObject {
 			exitControlButton.update(); // button for going back to menu
 
 		} else if (state == GameState.UPGRADING) { // while upgrading
+			
+			upgrades.update(); // lets player select upgrades
+
+			// Only go back to PLAY **after player confirms upgrade or no upgrades left**
+			if (upgrades.hasFinishedUpgrading()) {
+				state = GameState.OPEN;
+			}
 
 		} else if (state == GameState.CONTROLS) { // looking at controls
 			exitControlButton.update(); // for going back
@@ -137,6 +152,11 @@ public class GameObject {
 			exitControlButton.draw(g2); // draw exit button
 
 		} else if (state == GameState.UPGRADING) {
+			
+			g2.setColor(new Color(0, 0, 0, 150)); // dark semi-transparent overlay
+			g2.fillRect(0, 0, AppPanel.WIDTH, AppPanel.HEIGHT);
+
+			upgrades.draw(g2);
 
 		} else if (state == GameState.CONTROLS) {
 
@@ -204,5 +224,65 @@ public class GameObject {
 	private void toMenu() {
 		state = GameState.MENU;
 
+	}
+	
+	private void startUpgrades() {
+		state = GameState.UPGRADING;
+	}
+
+	public MouseInput getMouseHandler() {
+		return mouseHandler;
+	}
+
+	public void setMouseHandler(MouseInput mouseHandler) {
+		this.mouseHandler = mouseHandler;
+	}
+
+	public KeyboardInput getKeyH() {
+		return keyH;
+	}
+
+	public void setKeyH(KeyboardInput keyH) {
+		this.keyH = keyH;
+	}
+
+	public static GameState getState() {
+		return state;
+	}
+
+	public static void setState(GameState state) {
+		GameObject.state = state;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+	
+	public void addEnemy(Enemy e) {
+		enemies.add(e);
+	}
+
+	public void setEnemies(ArrayList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+	public EnemyWaves getWaves() {
+		return waves;
+	}
+
+	public void setWaves(EnemyWaves waves) {
+		this.waves = waves;
+	}
+	
+	public Background getMap() {
+		return map;
 	}
 }

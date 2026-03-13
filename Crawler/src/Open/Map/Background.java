@@ -7,12 +7,12 @@ import main.AppPanel;
 import main.GameObject;
 
 public class Background {
-	public int tileSize = 100;
-	public int rows = 50, cols = 50;
-	public int[][] tiles = new int[rows][cols];
+	private int tileSize = 100;
+	private int rows = 50, cols = 50;
+	private int[][] tiles = new int[rows][cols];
 
-	public int WIDTH = tileSize * rows;
-	public int HEIGHT = tileSize * cols;
+	public final int WIDTH = tileSize * rows;
+	public final int HEIGHT = tileSize * cols;
 
 	private GameObject gameObj;
 
@@ -30,8 +30,8 @@ public class Background {
 	public void draw(Graphics2D g) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				int screenX = c * tileSize - gameObj.player.x + AppPanel.WIDTH / 2;
-				int screenY = r * tileSize - gameObj.player.y + AppPanel.HEIGHT / 2;
+				int screenX = c * tileSize - gameObj.getPlayer().getX() + AppPanel.WIDTH / 2;
+				int screenY = r * tileSize - gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2;
 
 				if (tiles[r][c] == 0)
 					g.setColor(Color.GREEN);

@@ -24,6 +24,8 @@ public class Enemy extends Entity {
 
 	public Enemy(GameObject gameObj, int x, int y, int teir) {
 		super(gameObj);
+		
+		maxHp = 10;
 
 		//random image
 		int type = (int) (Math.random() * 6) + 1;
@@ -36,7 +38,7 @@ public class Enemy extends Entity {
 		height = 100;
 
 		speed = 4;
-		hp = 10; // sets hp stuff
+		currHp = maxHp; // sets hp stuff
 
 		if (walkFrames == null || walkFrames.length == 0)
 			walkFrames = new BufferedImage[1];
@@ -50,7 +52,7 @@ public class Enemy extends Entity {
 			walkFrames = Assets.zombieWalk;
 			deathFrames = Assets.zombieDeath;
 			speed--;
-			hp +=5;
+			maxHp +=5;
 		}
 		case 2 -> {
 			walkFrames = Assets.skeletonWalk;
@@ -60,25 +62,25 @@ public class Enemy extends Entity {
 		case 3 -> {
 			walkFrames = Assets.mudmanWalk;
 			deathFrames = Assets.mudmanDeath;
-			hp += 10;
+			maxHp += 10;
 		}
 		case 4 -> {
 			walkFrames = Assets.ghostWalk;
 			deathFrames = Assets.ghostDeath;
 			speed += 2;
-			hp -=5;
+			maxHp -=5;
 		}
 		case 5 -> {
 			walkFrames = Assets.batWalk;
 			deathFrames = Assets.batDeath;
 			speed +=2;
-			hp -= 3;
+			maxHp -= 3;
 		}
 		case 6 -> {
 			walkFrames = Assets.glowingBatWalk;
 			deathFrames = Assets.glowingBatDeath;
 			speed++;
-			hp += 20;
+			maxHp += 20;
 		}
 		}
 	}
@@ -90,8 +92,8 @@ public class Enemy extends Entity {
 	public void damage(int amount) { 
 		if (dying)
 			return;
-		hp -= amount;
-		if (hp <= 0) {
+		currHp -= amount;
+		if (currHp <= 0) {
 			die();
 		}
 	}
@@ -140,8 +142,8 @@ public class Enemy extends Entity {
 	}
 
 	private void followPlayer() {
-		double dx = gameObj.player.x - x;
-		double dy = gameObj.player.y - y;
+		double dx = gameObj.getPlayer().getX() - getX();
+		double dy = gameObj.getPlayer().getY() - getY();
 		double dist = Math.sqrt(dx * dx + dy * dy); // finds the distance
 
 		if (dist > 0) { // if not on player
@@ -156,16 +158,16 @@ public class Enemy extends Entity {
 
 	public void draw(Graphics2D g) {
 		// Calculate screen position
-		int screenX = x - gameObj.player.x + AppPanel.WIDTH / 2 - width / 2;
-		int screenY = y - gameObj.player.y + AppPanel.HEIGHT / 2 - height / 2;
+		int screenX = x - gameObj.getPlayer().getX() + AppPanel.WIDTH / 2 - width / 2;
+		int screenY = y - gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2 - height / 2;
 
 		BufferedImage img;
 
 		if (dying) {
 			// Freeze position at death for drawing
 			img = deathFrames[Math.min(frame, deathFrames.length - 1)];
-			g.drawImage(img, deathX - gameObj.player.x + AppPanel.WIDTH / 2 - width / 2,
-					deathY - gameObj.player.y + AppPanel.HEIGHT / 2 - height / 2, width + 50, height + 50, null);
+			g.drawImage(img, deathX - gameObj.getPlayer().getX() + AppPanel.WIDTH / 2 - width / 2,
+					deathY - gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2 - height / 2, width + 50, height + 50, null);
 		} else {
 			//normal animation stuff
 			img = walkFrames[Math.min(frame, walkFrames.length - 1)];
