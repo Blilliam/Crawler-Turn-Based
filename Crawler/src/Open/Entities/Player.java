@@ -17,6 +17,8 @@ import main.enums.GameState;
 
 public class Player extends Entity {
 	private ArrayList<Artifact> artifacts = new ArrayList<>();
+	
+	private int kills;
 
 	private int expToUpgrade = 10;
 	private int totalUpgradesAvailible = 1;
@@ -226,5 +228,13 @@ public class Player extends Entity {
 
 	public void setExpToUpgrade(int expToUpgrade) {
 		this.expToUpgrade = expToUpgrade;
+	}
+	
+	public void addKills(int count) {
+		kills += count;
+	}
+	
+	public int getKills() {
+		return kills;
 	}
 }

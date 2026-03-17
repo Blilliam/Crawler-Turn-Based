@@ -12,6 +12,7 @@ public class KeyboardInput implements KeyListener {
 	public boolean down = false;
 	public boolean left = false;
 	public boolean right = false;
+	public boolean boost = false;
 
 	@Override
 	public void keyTyped(KeyEvent e) {

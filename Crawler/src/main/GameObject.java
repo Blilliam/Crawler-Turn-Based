@@ -6,6 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import Open.Entities.Chest;
 import Open.Entities.Exp;
 import Open.Entities.Player;
 import Open.Entities.Enemies.Enemy;
@@ -44,6 +45,9 @@ public class GameObject {
 	// all enemies
 	private ArrayList<Enemy> enemies;
 	
+	//chests
+	private ArrayList<Chest> chests;
+	
 	//exp
 	private ArrayList<Exp> exp;
 	
@@ -63,10 +67,18 @@ public class GameObject {
 
 		this.mouseHandler = mouseHandler;
 		state = GameState.MENU; // sets teh state to the meneu
+		
+		
 
 		// actually initializes the buttons
 		startButtonWidth = 300;
 		startButtonHeight = 100;
+
+		controlButtonWidth = 300;
+		controlButtonHeight = 100;
+
+		exitControlButtonWidth = 300;
+		exitControlButtonHeight = 100;
 
 		startButton = new GameButton(AppPanel.WIDTH / 2 - startButtonWidth / 2,
 				AppPanel.HEIGHT / 2 - startButtonHeight / 2, startButtonWidth, startButtonHeight, "START",
@@ -89,6 +101,8 @@ public class GameObject {
 			controlButton.update();
 
 		} else if (state == GameState.OPEN) {
+			
+			ScoreManager.checkAndUpdateHighScore(player.getKills());//update the score
 
 			// updatePlayer
 			player.update();
@@ -101,6 +115,12 @@ public class GameObject {
 				if (e.isDead) {
 					enemies.remove(i); // removes dead enemies
 				}
+			}
+			for (Exp e: exp) {
+				e.update();
+			}
+			for (Chest e: chests) {
+				e.update();
 			}
 			waves.update(); // update enemy spawning
 
@@ -171,6 +191,12 @@ public class GameObject {
 		for (Enemy e : enemies) {
 			e.draw(g2); // draw every enemy
 		}
+		for (Exp e: exp) {
+			e.draw(g2);
+		}
+		for (Chest e: chests) {
+			e.draw(g2);
+		}
 	}
 
 	public void drawControls(Graphics2D g2) {
@@ -211,6 +237,19 @@ public class GameObject {
 		waves = new EnemyWaves(this);
 
 		state = GameState.OPEN;
+		
+		exp = new ArrayList<Exp>();
+		
+		chests = new ArrayList<Chest>();
+		chests.add(new Chest(this, player.getX() + 200, player.getY()));
+	}
+	
+	public int getCameraX() {
+	    return (int)player.getX() - AppPanel.WIDTH / 2;
+	}
+
+	public int getCameraY() {
+	    return (int)player.getY() - AppPanel.HEIGHT / 2;
 	}
 
 	private void startBossBattle() {
@@ -284,5 +323,9 @@ public class GameObject {
 	
 	public Background getMap() {
 		return map;
+	}
+	
+	public void addExp(int value, int x, int y) {
+		exp.add(new Exp(this, value, x, y));
 	}
 }

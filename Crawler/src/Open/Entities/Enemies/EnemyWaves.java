@@ -45,21 +45,33 @@ public class EnemyWaves {
 	    for (int i = 0; i < numEnemies; i++) {
 	        int tier = baseTier + (int) (Math.random() * 3);
 
-	        int tempX, tempY;
+	        int tempX = 0;
+	        int tempY = 0;
 
 	        boolean spawnLeftOrRight = Math.random() < 0.5;
 
 	        if (spawnLeftOrRight) {
 	            // Spawn left or right off-screen
-	            tempX = Math.random() < 0.5
-	                    ? gameObj.getPlayer().getX() - AppPanel.WIDTH / 2 - margin  // left
-	                    : gameObj.getPlayer().getY() + AppPanel.WIDTH / 2 + margin; // right
+	            if (Math.random() < 0.5) {
+	                // left
+	                tempX = gameObj.getPlayer().getX() - AppPanel.WIDTH / 2 - margin;
+	            } else {
+	                // right
+	                tempX = gameObj.getPlayer().getY() + AppPanel.WIDTH / 2 + margin;
+	            }
+
 	            tempY = (int) (Math.random() * gameObj.getMap().HEIGHT);
+
 	        } else {
 	            // Spawn top or bottom off-screen
-	            tempY = Math.random() < 0.5
-	                    ? gameObj.getPlayer().getY() - AppPanel.HEIGHT / 2 - margin // top
-	                    : gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2 + margin; // bottom
+	            if (Math.random() < 0.5) {
+	                // top
+	                tempY = gameObj.getPlayer().getY() - AppPanel.HEIGHT / 2 - margin;
+	            } else {
+	                // bottom
+	                tempY = gameObj.getPlayer().getY() + AppPanel.HEIGHT / 2 + margin;
+	            }
+
 	            tempX = (int) (Math.random() * gameObj.getMap().WIDTH);
 	        }
 
