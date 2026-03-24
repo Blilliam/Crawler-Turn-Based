@@ -32,17 +32,7 @@ public class Upgrades {
 	final int rectWidth = 300;
 	final int rectHeight = 450;
 
-	int[] costs = { 5, 5, 5, 5, 5, 5, 5, 5 };
 
-	// =========================
-	// BUTTONS
-	// =========================
-	private GameButton exitButton;
-	private GameButton rerollButton;
-
-	// =========================
-	// CONSTRUCTOR
-	// =========================
 	public Upgrades(GameObject gameObj) {
 
 		rarities = new WeaponRarity[4];
@@ -57,7 +47,6 @@ public class Upgrades {
 		totalBoxes = new UpgradeBox[numberOfTotalBoxes];
 		for (int i = 0; i < numberOfTotalBoxes; i++) {
 			totalBoxes[i] = new UpgradeBox(gameObj, i + 1, 0, 0);
-			totalBoxes[i].cost = costs[i];
 		}
 
 		randomCurrBox();

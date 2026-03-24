@@ -12,15 +12,16 @@ public class Assets {
 	// initializes all the images
 
 	// Weapons
-	public static BufferedImage knife;
-	public static BufferedImage whip;
-	public static BufferedImage axe;
-	public static BufferedImage cross;
-	public static BufferedImage kingBible;
-	public static BufferedImage magicWand;
-	public static BufferedImage fireWand;
+	public static BufferedImage aura;
+	public static BufferedImage bone;
+//	public static BufferedImage axe;
+//	public static BufferedImage cross;
+//	public static BufferedImage kingBible;
+//	public static BufferedImage magicWand;
+//	public static BufferedImage fireWand;
 
-	public static BufferedImage manaSphere;
+	public static BufferedImage WeaponBanana;
+	public static BufferedImage ProjectileBanana;
 
 	// Player
 	public static BufferedImage playerSheet;
@@ -46,15 +47,15 @@ public class Assets {
 			// assigns each image variable to an actual image in the file
 
 			// Weapons
-			knife = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Knife.png"));
-			whip = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Whip.png"));
-			axe = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Axe.png"));
-			cross = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Cross.png"));
-			kingBible = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-King_Bible.png"));
-			magicWand = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Magic_Wand.png"));
-			fireWand = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Fire_Wand.png"));
+			aura = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Knife.png"));
+			bone = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Bone.png"));
+//			axe = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Axe.png"));
+//			cross = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Cross.png"));
+//			kingBible = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-King_Bible.png"));
+//			magicWand = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Magic_Wand.png"));
+//			fireWand = ImageIO.read(Assets.class.getResource("/Images/Items/Sprite-Fire_Wand.png"));
 
-			manaSphere = ImageIO.read(Assets.class.getResource("/Images/Other/edited mana sphere.png"));
+			ProjectileBanana = ImageIO.read(Assets.class.getResource("/Images/Items/Banana projectile.png"));
 
 			// Player
 			playerSheet = ImageIO.read(Assets.class.getResource("/Images/Player/antonio_spritesheet.png"));

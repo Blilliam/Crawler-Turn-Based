@@ -8,7 +8,6 @@ import main.MouseInput;
 
 public class UpgradeBox {
 
-    public int cost = 5;
     public int type;
     private final GameObject gameObj;
 
@@ -56,10 +55,6 @@ public class UpgradeBox {
         // Border
         g2.setColor(new Color(0, 120, 255));
         g2.drawRect(x, drawY, w, h);
-
-        // Cost label
-        g2.setColor(new Color(255, 200, 0));
-        g2.drawString("Cost: " + cost, x + 10, drawY + 20);
 
         // Description text
         g2.setColor(Color.WHITE);

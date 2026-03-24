@@ -13,6 +13,7 @@ import Open.Entities.Enemies.Enemy;
 import Open.Entities.Enemies.EnemyWaves;
 import Open.Map.Background;
 import Open.Upgrades.Upgrades;
+import Open.Weapons.WeaponProjectile.WeaponEntity;
 import main.enums.GameState;
 
 public class GameObject {
@@ -50,6 +51,8 @@ public class GameObject {
 	
 	//exp
 	private ArrayList<Exp> exp;
+	
+	private ArrayList<WeaponEntity> projectiles;
 	
 	//upgrades
 	private Upgrades upgrades;
@@ -122,6 +125,10 @@ public class GameObject {
 			for (Chest e: chests) {
 				e.update();
 			}
+			for (WeaponEntity e: projectiles) {
+				e.update();
+			}
+			
 			waves.update(); // update enemy spawning
 
 		} else if (state == GameState.BOSS) { // boss battle
@@ -195,6 +202,9 @@ public class GameObject {
 			e.draw(g2);
 		}
 		for (Chest e: chests) {
+			e.draw(g2);
+		}
+		for (WeaponEntity e: projectiles) {
 			e.draw(g2);
 		}
 	}

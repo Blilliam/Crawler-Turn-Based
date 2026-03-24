@@ -10,9 +10,6 @@ import main.enums.ChestState;
 
 public class Chest extends Entity{
 
-    private int width = 80;
-    private int height = 60;
-
     private ChestState state = ChestState.CLOSED;
 
     private int shakeTimer = 0;
@@ -22,6 +19,8 @@ public class Chest extends Entity{
 
     public Chest(GameObject gameObj, int x, int y){
     	super(gameObj);
+    	width = 80;
+        height = 60;
     	this.x = x;
     	this.y = y;
     }
